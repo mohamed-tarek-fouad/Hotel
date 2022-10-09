@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admins {
+  id              Int               @id @default(autoincrement())
+  name            String
+  email           String            @unique
+  password        String
+  phoneNumber     String
+  reservedRooms   ReservedRooms[]
+  checkedOutRooms CheckedOutRooms[]
+  tokens          tokens[]
+}
+
+model tokens {
+  id        Int      @id @default(autoincrement())
+  adminId   Int
+  expiresAt DateTime
+  admin     Admins   @relation(fields: [adminId], references: [id])
+}
+
+model CheckedOutRooms {
+  id          Int        @id @default(autoincrement())
+  totalCost   Int
+  feedBack    String
+  startAt     DateTime
+  endAt       DateTime   @default(now())
+  adminId     Int
+  roomId      Int
+  custommerId String
+  admin       Admins     @relation(fields: [adminId], references: [id])
+  custommer   Custommers @relation(fields: [custommerId], references: [id])
+  room        Rooms      @relation(fields: [roomId], references: [id])
+}
+
+model Custommers {
+  id              String            @id
+  name            String
+  email           String
+  phoneNumber     String
+  reservedRooms   ReservedRooms[]
+  checkedOutRooms CheckedOutRooms[]
+}
+
+model ReservedRooms {
+  id          Int        @id @default(autoincrement())
+  startAt     DateTime   @default(now())
+  endAt       DateTime
+  adminId     Int
+  custommerId String
+  roomId      Int        @unique
+  admin       Admins     @relation(fields: [adminId], references: [id])
+  custommer   Custommers @relation(fields: [custommerId], references: [id])
+  room        Rooms      @relation(fields: [roomId], references: [id])
+}
+
+model Rooms {
+  id              Int               @id @default(autoincrement())
+  type            RoomType
+  dayCost         Int
+  description     String
+  status          Status            @default(available)
+  reservedRooms   ReservedRooms?
+  checkedOutRooms CheckedOutRooms[]
+}
+
+enum RoomType {
+  single
+  double
+}
+
+enum Status {
+  reserved
+  available
+  disabled
+}
