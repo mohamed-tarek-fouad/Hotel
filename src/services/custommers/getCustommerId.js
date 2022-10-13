@@ -1,4 +1,7 @@
-import { okResponse } from "../../helpers/functions/ResponseHandler.js";
+import {
+  badRequestResponse,
+  okResponse,
+} from "../../helpers/functions/ResponseHandler.js";
 import { prisma } from "../../index.js";
 
 export async function getCustommerId(req, res, next) {
@@ -13,6 +16,9 @@ export async function getCustommerId(req, res, next) {
         checkedOutRooms: true,
       },
     });
+    if (!custommer) {
+      return badRequestResponse(res, "this custommer dosn't exist");
+    }
     return okResponse(res, "fetched the custommer successfully", custommer);
   } catch (err) {
     next(err);

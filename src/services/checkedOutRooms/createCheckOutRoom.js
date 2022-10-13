@@ -6,6 +6,7 @@ import { prisma } from "../../index.js";
 export async function createCheckOutRoom(req, res, next) {
   try {
     const { id } = req.user;
+    let startAt;
     const { feedBack, custommerId, roomId } = req.body;
     const validateCustommer = await prisma.custommers.findUnique({
       where: {
@@ -49,8 +50,15 @@ export async function createCheckOutRoom(req, res, next) {
     if (!validateReservation) {
       return badRequestResponse(res, "reservation doesn't exist");
     }
+    if (validateReservation.custommerId != custommerId) {
+      return badRequestResponse(res, "invalid custommerId");
+    }
 
-    const startAt = custommer.reservedRooms[0].startAt;
+    if (custommer.reservedRooms[0]) {
+      startAt = custommer.reservedRooms[0].startAt;
+    } else {
+      startAt = custommer.reservedRooms;
+    }
     const daysSpent = Math.floor(
       Math.abs(new Date().getTime() - new Date(startAt).getTime()) /
         (1000 * 60 * 60 * 24)

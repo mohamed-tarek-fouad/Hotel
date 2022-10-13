@@ -10,6 +10,7 @@ import reservedRooms from "./controllers/reservedRooms.controller.js";
 import rooms from "./controllers/rooms.controller.js";
 
 import { CronJob } from "cron";
+import { join } from "path";
 const prisma = new PrismaClient();
 dotenv.config();
 
@@ -18,6 +19,7 @@ registerStrategies();
 
 // -- Middlewares --
 app.use(express.json());
+app.use("/uploads", express.static(join(process.cwd(), "uploads")));
 // -- Routes --
 app.use("/auth", authRouter);
 app.use("/checkedOutRooms", checkedOutRooms);

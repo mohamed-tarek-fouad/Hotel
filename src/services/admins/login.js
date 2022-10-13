@@ -22,7 +22,7 @@ export async function login(req, res, next) {
     }
     const newToken = await prisma.tokens.create({
       data: {
-        userId: user.id,
+        adminId: user.id,
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
       },
     });

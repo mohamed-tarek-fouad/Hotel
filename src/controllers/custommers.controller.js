@@ -3,6 +3,7 @@ import * as custommersService from "../services/custommers/index.js";
 import authenticateWithJWT from "../helpers/functions/authenticateWithJWT.js";
 import JoiMiddleware from "../helpers/middlewares/joiMiddleware.js";
 import custommerSchema from "../helpers/schemas/custommer.schema.js";
+import updateCustommerSchema from "../helpers/schemas/updateCustommer.schema.js";
 const ordersRouter = Router();
 
 ordersRouter.post(
@@ -15,7 +16,7 @@ ordersRouter.get("/", authenticateWithJWT, custommersService.getCustommers);
 ordersRouter.get("/:id", authenticateWithJWT, custommersService.getCustommerId);
 ordersRouter.put(
   "/:id",
-  JoiMiddleware(custommerSchema),
+  JoiMiddleware(updateCustommerSchema),
   authenticateWithJWT,
   custommersService.editCustommer
 );

@@ -16,10 +16,7 @@ export default async function authenticateWithJWT(req, res, next) {
         if (err.message === "invalid signature") {
           return unAuthorizedResponse(res, "Invalid signature");
         }
-        return internalServerErrorResponse(
-          res,
-          "An error has occured on the server"
-        );
+        return internalServerErrorResponse(res, "no token ");
       }
       if (clientError) {
         return internalServerErrorResponse(

@@ -25,7 +25,6 @@ export async function updateReservation(req, res, next) {
     if (!endAt) {
       endAt = reservedRoom.endAt;
     }
-
     const updatedRoom = await prisma.reservedRooms.update({
       where: {
         id: parseInt(id),
